@@ -1,13 +1,81 @@
 <app-navbar></app-navbar>
 
-<!--<h1>{{ title }}</h1>-->
+<h1 class="text-center mt-5 mb-5">{{ title }}</h1>
 
 <!-- this creates a google map on the page with the given lat/lng from -->
 <!-- the component as the initial center of the map: -->
 
-<sebm-google-map 
-                 [latitude]="lat" 
-                 [longitude]="lng"
-                 [zoom]="zoom">
-  <sebm-google-map-marker [latitude]="lat" [longitude]="lng"></sebm-google-map-marker>
-</sebm-google-map>
+<div class="container">
+
+<div class="row">
+    <div class="col-md-4">
+      <div *ngIf="!marcadorSel" >
+        <div class="alert alert-info animated fadeIn fast">
+          <strong>Haga click en el mapa para crear un marcador o seleccione un marcador para editarlo</strong>
+        </div>
+      </div>
+      <div *ngIf="marcadorSel" class="animated fadeIn fast" >
+        <h5>Marcador</h5>
+        <hr/>
+        <div class="form-group">
+          <label> Título </label>
+          <input type="text"
+                 class="form-control"
+                 name="titulo"
+                 [(ngModel)]="marcadorSel.titulo">
+        </div>
+        <div class="form-group">
+          <label> Descripción </label>
+          <textarea type="text"
+                    class="form-control"
+                    name="desc"
+                    [(ngModel)]="marcadorSel.desc"
+                    rows="5">
+          </textarea>
+        </div>
+        <div class="form-group">
+          <label> Se puede mover? </label>
+          <select   class="form-control"
+                    name="draggable"
+                    [(ngModel)]="draggable"
+                    (change)="cambiarDragable()">
+                    <option value="1">Si</option>
+                    <option value="0">No</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-outline-primary btn-block" (click)="ms.guardarMarcadores()">guardar</button>
+      </div>
+
+    </div>
+
+    <div class="col-md-8">
+
+      <sebm-google-map (mapClick)="clickMapa($event)"
+                      [latitude]="lat"
+                      [longitude]="lng"
+                      [zoom]="zoom">
+        <sebm-google-map-marker *ngFor="let marcador of ms.marcadores; let i = index"
+                                [latitude]="marcador.lat"
+                                [longitude]="marcador.lng"
+                                [markerDraggable]="marcador.draggable"
+                                (markerClick)="clickMarcador( marcador, i )"
+                                (dragEnd)="dragEndMarcador( marcador, $event )">
+          <sebm-google-map-info-window>
+            <!--<strong>Título</strong>-->
+            <strong>{{marcador.titulo}}</strong>
+            <!--<p>Ivan Diaz Diaz</p>-->
+            <p *ngIf="marcador.desc" >
+              {{marcador.desc}}
+            </p>
+            <p>
+              <a class="text-danger puntero" (click)="ms.borrarMarcador(i); marcadorSel = null;">Borrar Marcador</a>
+            </p>
+          </sebm-google-map-info-window>
+        </sebm-google-map-marker>
+      </sebm-google-map>
+
+    </div>
+</div>
+
+</div>
+

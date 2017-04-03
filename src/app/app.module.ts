@@ -1,3 +1,4 @@
+import { MapasService } from './services/mapas.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +22,7 @@ import { AgmCoreModule } from 'angular2-google-maps/core';
       apiKey: 'AIzaSyDRhXnre--IlMW63HoYqK6SaRbXUhiqvW4'
     })
   ],
-  providers: [],
+  providers: [ MapasService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
